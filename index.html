@@ -15,7 +15,7 @@
 :root {
   --bg: #eef0e6; --surface: #fbfcf6; --ink: #262318; --muted: #6b6656; --line: #d6d8c8;
   --accent: #c9561a; --accent-ink: #ffffff; --ok: #2f7d43;
-  --t-blu: #376ec8; --t-verde: #19a050; --t-arancione: #e0701a; --t-rossa: #d22d2d;
+  --t-blu: #8a3fc1; --t-verde: #19a050; --t-arancione: #e0701a; --t-rossa: #d22d2d; --t-bianco: #f7f7f2;
   --f-display: "Alegreya", Georgia, "Times New Roman", serif;
   --f-body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
   --r: 10px;
@@ -40,7 +40,7 @@ h2 { font-family: var(--f-display); font-weight: 800; font-size: 1.35rem; margin
 .mapbox img, .mapbox svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { font: inherit; font-weight: 700; border: 2px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 6px 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
-.chip .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--c, var(--ink)); }
+.chip .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--c, var(--ink)); box-shadow: 0 0 0 1px rgba(0,0,0,.45); }
 .chip[aria-pressed="true"] { border-color: var(--c, var(--accent)); box-shadow: inset 0 0 0 1px var(--c, var(--accent)); }
 .chip:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .sols { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
@@ -60,12 +60,12 @@ fieldset small { color: var(--muted); display: block; margin-top: 4px; }
 table { border-collapse: collapse; width: 100%; min-width: 560px; font-variant-numeric: tabular-nums; }
 th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
 th { font-size: .82rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
-th .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--c); margin-right: 6px; }
+th .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--c); margin-right: 6px; box-shadow: 0 0 0 1px rgba(0,0,0,.45); }
 td.turno { font-weight: 700; white-space: nowrap; }
 td.ok { color: var(--ok); font-weight: 700; white-space: nowrap; }
 tr.finale td { background: color-mix(in srgb, var(--accent) 10%, transparent); }
 .teams { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
-.team { border-left: 5px solid var(--c); padding: 4px 0 4px 12px; min-width: 0; }
+.team { border-left: 5px solid var(--c); box-shadow: -6px 0 0 -5px var(--muted); padding: 4px 0 4px 12px; min-width: 0; }
 .team h3 { margin: 0 0 4px; font-family: var(--f-display); font-size: 1.1rem; }
 .team ol { margin: 0; padding-left: 1.3em; }
 .team p { margin: 4px 0 0; color: var(--muted); font-size: .9rem; }
@@ -77,7 +77,8 @@ tr.finale td { background: color-mix(in srgb, var(--accent) 10%, transparent); }
 .caption { margin: 0; padding: 10px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); min-height: 3em; }
 .caption b { font-family: var(--f-display); font-size: 1.1rem; }
 .caption .warn { color: var(--t-rossa); font-weight: 700; display: block; margin-top: 4px; }
-.caption .sq { font-weight: 700; color: var(--c); }
+.caption .sq { font-weight: 700; color: var(--ink); white-space: nowrap; }
+.caption .sq::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 1px rgba(0,0,0,.45); margin-right: 5px; }
 tr.attivo td { background: color-mix(in srgb, var(--accent) 22%, transparent); }
 @media (prefers-reduced-motion: no-preference) { .sol, .chip { transition: border-color .15s ease; } }
 </style>
@@ -92,7 +93,7 @@ tr.attivo td { background: color-mix(in srgb, var(--accent) 22%, transparent); }
   <section class="panel" aria-labelledby="regole-t">
     <h2 id="regole-t">Le regole usate</h2>
     <ul class="rules">
-      <li>Squadre blu e verde partono dall'ingresso della casetta Auser, arancione e rossa dall'ingresso principale.</li>
+      <li>Pipistrelli Mannari (viola) e Scheletri Danzanti (verde) partono dall'ingresso della casetta Auser, Zucche Stregate (arancione) e Fantasmi Urlanti (bianco) dall'ingresso principale.</li>
       <li>Tutte partono insieme e avanzano a turni: dal turno 1 al 6 ogni squadra è su una tappa diversa dalle altre.</li>
       <li>Al turno 7 tutte arrivano all'Albero grande, dove aspettano le altre squadre.</li>
       <li>La prima tappa di ogni squadra è una di quelle vicine al suo ingresso (modificabili qui sotto).</li>
@@ -136,8 +137,8 @@ tr.attivo td { background: color-mix(in srgb, var(--accent) 22%, transparent); }
   <section class="panel" aria-labelledby="set-t">
     <h2 id="set-t">Prime tappe ammesse</h2>
     <form class="settings" id="form">
-      <fieldset id="fs-principale"><legend>Ingresso principale (arancione, rossa)</legend></fieldset>
-      <fieldset id="fs-auser"><legend>Ingresso casetta Auser (blu, verde)</legend></fieldset>
+      <fieldset id="fs-principale"><legend>Ingresso principale (Zucche Stregate, Fantasmi Urlanti)</legend></fieldset>
+      <fieldset id="fs-auser"><legend>Ingresso casetta Auser (Pipistrelli Mannari, Scheletri Danzanti)</legend></fieldset>
       <div style="display:grid; gap:8px; align-content:start;">
         <button class="btn" type="submit" id="calc">Ricalcola le soluzioni</button>
         <span class="status">Per ogni ingresso servono almeno 2 tappe, perché le due squadre partono insieme.</span>
@@ -154,10 +155,10 @@ const FINALE = "Albero grande";
 const TAPPE = ["Leone", "Calderone", "Colonne / tempietto", "Fontana", "Sarcofago", "Obelisco"];
 const ING = { principale: "Ingresso principale", auser: "Ingresso Auser" };
 const SQUADRE = [
-  { id: "blu", nome: "Squadra blu", varc: "--t-blu", ing: "auser" },
-  { id: "verde", nome: "Squadra verde", varc: "--t-verde", ing: "auser" },
-  { id: "arancione", nome: "Squadra arancione", varc: "--t-arancione", ing: "principale" },
-  { id: "rossa", nome: "Squadra rossa", varc: "--t-rossa", ing: "principale" },
+  { id: "blu", nome: "Squadra Pipistrelli Mannari", varc: "--t-blu", ing: "auser" },
+  { id: "verde", nome: "Squadra Scheletri Danzanti", varc: "--t-verde", ing: "auser" },
+  { id: "arancione", nome: "Squadra Zucche Stregate", varc: "--t-arancione", ing: "principale" },
+  { id: "rossa", nome: "Squadra Fantasmi Urlanti", varc: "--t-bianco", ing: "principale", chiaro: true },
 ];
 const DEFAULT = { principale: ["Leone", "Calderone", "Colonne / tempietto"], auser: ["Sarcofago", "Obelisco", "Fontana"] };
 const PX_PER_M = 4.9;
@@ -165,6 +166,8 @@ const K = 5;
 
 const css = getComputedStyle(document.documentElement);
 const col = (s) => css.getPropertyValue(s.varc).trim() || "#888";
+const testo = (s) => s.chiaro ? "#1b1a14" : "#fff";   // scritte scure sul cerchio bianco
+const bordo = (s) => s.chiaro ? "#1b1a14" : "#fff";
 const d = (a, b) => DATA.dist[a + "|" + b];
 const metri = (px) => "≈ " + Math.round(px / PX_PER_M / 5) * 5 + " m";
 
@@ -323,13 +326,13 @@ function disegna() {
     if (vista === sq.id) {
       s.rotte[i].forEach((t, n) => {
         const [x, y] = DATA.tappe[t];
-        el("circle", { cx: x, cy: y, r: 24, fill: col(sq), stroke: "#fff", "stroke-width": 4 }, g);
-        const tx = el("text", { x, y: y + 9, "text-anchor": "middle", "font-size": 27, "font-weight": 700, fill: "#fff", "font-family": "Atkinson Hyperlegible, sans-serif" }, g);
+        el("circle", { cx: x, cy: y, r: 24, fill: col(sq), stroke: bordo(sq), "stroke-width": 4 }, g);
+        const tx = el("text", { x, y: y + 9, "text-anchor": "middle", "font-size": 27, "font-weight": 700, fill: testo(sq), "font-family": "Atkinson Hyperlegible, sans-serif" }, g);
         tx.textContent = n + 1;
       });
       const [x, y] = DATA.tappe[FINALE];
-      el("circle", { cx: x, cy: y, r: 24, fill: col(sq), stroke: "#fff", "stroke-width": 4 }, g);
-      const tx = el("text", { x, y: y + 9, "text-anchor": "middle", "font-size": 27, "font-weight": 700, fill: "#fff", "font-family": "Atkinson Hyperlegible, sans-serif" }, g);
+      el("circle", { cx: x, cy: y, r: 24, fill: col(sq), stroke: bordo(sq), "stroke-width": 4 }, g);
+      const tx = el("text", { x, y: y + 9, "text-anchor": "middle", "font-size": 27, "font-weight": 700, fill: testo(sq), "font-family": "Atkinson Hyperlegible, sans-serif" }, g);
       tx.textContent = 7;
     }
   });
@@ -389,7 +392,7 @@ function chips() {
 // ---------- movimento delle squadre turno per turno
 const VEL = 300;                       // px al secondo sulla mappa, uguale per tutte
 const OFFS = { blu: [-14, -14], verde: [14, -14], arancione: [-14, 14], rossa: [14, 14] };
-const INIZ = { blu: "B", verde: "V", arancione: "A", rossa: "R" };
+const INIZ = { blu: "P", verde: "S", arancione: "Z", rossa: "F" };
 let passo = 0, anim = null, inRiproduzione = false;
 function tratto(i, k) { return trattoR(soluzioni[corrente].rotte, i, k); }   // percorso della squadra i nel turno k
 function posizioneFerma(i, k) {        // dove sta la squadra i alla fine del turno k (0 = ingresso)
@@ -411,8 +414,8 @@ function pedine(pos, segnali) {
   SQUADRE.forEach((sq, i) => {
     const [x, y] = pos[i], [ox, oy] = pos.fermi && pos.fermi[i] ? OFFS[sq.id] : [0, 0];
     el("circle", { cx: x + ox, cy: y + oy + 4, r: 21, fill: "#1b1a14", opacity: .35 }, g);
-    el("circle", { cx: x + ox, cy: y + oy, r: 20, fill: col(sq), stroke: "#fff", "stroke-width": 4 }, g);
-    const t = el("text", { x: x + ox, y: y + oy + 8, "text-anchor": "middle", "font-size": 22, "font-weight": 700, fill: "#fff", "font-family": "Atkinson Hyperlegible, sans-serif" }, g);
+    el("circle", { cx: x + ox, cy: y + oy, r: 20, fill: col(sq), stroke: bordo(sq), "stroke-width": 4 }, g);
+    const t = el("text", { x: x + ox, y: y + oy + 8, "text-anchor": "middle", "font-size": 22, "font-weight": 700, fill: testo(sq), "font-family": "Atkinson Hyperlegible, sans-serif" }, g);
     t.textContent = INIZ[sq.id];
   });
 }
